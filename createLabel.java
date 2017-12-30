@@ -24,15 +24,16 @@ public class createLabel extends JFrame {
     
     
         
-    //Set up the label size and shape
+    //Set up the label size and shape using data from text files
     public createLabel(String[] queueData, String[] labelData, String defaultsString[]) {
+        //Set Frame title
         super(queueData[0] + " - " + labelData[2]);
         
-        int scaler = 7;
-        int labelWidth = Integer.parseInt(labelData[0]);
-        int labelHeight = Integer.parseInt(labelData[1]);
+        int scaler = 7; //multiplier mm to screen size (arbitrary number!)
+        int labelWidth = Integer.parseInt(labelData[0]); //as mm
+        int labelHeight = Integer.parseInt(labelData[1]); // as mm
         
-        setSize((labelWidth * scaler) + 18, (labelHeight * scaler) +40);
+        setSize((labelWidth * scaler) + 18, (labelHeight * scaler) +40); // make so fits screen sensibly (18 and  40 = headers)
         setBackground(Color.DARK_GRAY);
         //repaint();
         //setLayout (null);
@@ -40,9 +41,9 @@ public class createLabel extends JFrame {
         Container cp = this.getContentPane();
         cp.setSize(labelWidth * scaler,labelHeight * scaler);
         
-        //cp.setSize(730,400);
+        // initialise content pane;
         cp.setBackground(Color.white);
-        cp.setLayout(null);
+        cp.setLayout(null); // allow exact coordinate placement
         int contentWidth = cp.getWidth();
         int contentHeight = cp.getHeight();
         
@@ -52,13 +53,14 @@ public class createLabel extends JFrame {
         
         //DISCOVER LABEL PARAMETERS
         //find name and split into fields
-        String labelName = (labelData[2]);
+        String labelName = (labelData[2]); // first data entry (after label size) is label name
         System.out.println (labelName);
         // fields = how many fields on the label
         int fields = 1;
         //datainputs = how many data items identify a field
         int dataInputs = 1;
         
+        //check for next occurrance of label name and how many itmes inbetween
         for (int i=3; i < labelData.length; i++) {
              if (labelData[i].equals (labelName)){
                  fields++;
@@ -75,7 +77,7 @@ public class createLabel extends JFrame {
         
         //MAIN ROUTINE FOR ADDING LABEL FIELDS ONE BY ONE
 
-        //iterate through fields
+        //iterate through fields, jumping n datainputs each row
         for (int i=0; i<fields; i++){
             
             int jump = dataInputs;
@@ -84,6 +86,7 @@ public class createLabel extends JFrame {
             //Collect queue data into variables
             String type = (labelData[start + 2]);
             System.out.println(i+" - " +type);
+            // Data from label definition
             int xSize = Integer.parseInt(labelData[start + 3]);
             int ySize = Integer.parseInt(labelData[start + 4]);
             int xPos = Integer.parseInt(labelData[start + 5]);
@@ -102,6 +105,7 @@ public class createLabel extends JFrame {
             Boolean isFontItalic = Boolean.parseBoolean(labelData[start +18]);
             String sentColour = (labelData[start +19]);
             
+            //data inherited from the plant entry - text and colouring
             String profileTextColour = (queueData[12]);
             String profileBorderColour = (queueData[15]);
             String profileBackgroundColour = (queueData[16]);
@@ -118,10 +122,11 @@ public class createLabel extends JFrame {
             
             //set content size and position
             int lines =1;//set lines as 1 and then increase if necessary later
-            int yPosd = 0;
-            int xPosd = 0;
-            int xSized = contentWidth*xSize/100;
-            int ySized = contentHeight*ySize/100/ (lines);
+            int yPosd = 0; //xPos = position sent as %age, xPosd = this converted to real dimension
+            int xPosd = 0; //yPos = position sent as %age, yPosd = this converted to real dimension
+            int xSized = contentWidth*xSize/100; //xSize = size sent as %age, xSized = this converted to real dimension
+            int ySized = contentHeight*ySize/100/ (lines); //ySize = size sent as %age, ySized = this converted to real dimension
+            // y or x position sent as 0 = centre this component
             if (xPos == 0 ) {
             //set as centred
             xPosd = (contentWidth/2) * (100-xSize)/100;
@@ -137,6 +142,7 @@ public class createLabel extends JFrame {
             
             
             
+            // draw a label dependant on what type it is
             switch (type) {
                 case "text" :
                     
